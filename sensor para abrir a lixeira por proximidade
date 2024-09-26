@@ -1,0 +1,33 @@
+#include <Servo.h>
+
+Servo meuServo;
+const int trigPin = 9;
+const int echoPin = 10;
+long duracao, distancia;
+
+void setup() {
+  meuServo.attach(7); // Pino do servomotor
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  meuServo.write(0); // Lixeira fechada
+  Serial.begin(9600);
+}
+
+void loop() {
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  
+  duracao = pulseIn(echoPin, HIGH);
+  distancia = (duracao * 0.034) / 2;
+
+  if (distancia < 10) { // Se objeto estiver a menos de 10 cm
+    meuServo.write(90); // Abrir lixeira
+    delay(5000); // Manter aberta por 5 segundos
+    meuServo.write(0); // Fechar lixeira
+  }
+
+  delay(100);
+}
