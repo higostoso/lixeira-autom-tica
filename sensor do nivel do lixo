@@ -1,0 +1,50 @@
+// Define os pinos do sensor ultrassônico
+const int trigPin = 9;
+const int echoPin = 10;
+
+// Define o pino do LED
+const int ledPin = 7;
+
+// Variáveis para armazenar o tempo e a distância
+long duration;
+int distance;
+
+void setup() {
+  // Define os modos dos pinos
+  pinMode(trigPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+  pinMode(ledPin, OUTPUT);
+
+  // Inicia a comunicação serial
+  Serial.begin(9600);
+}
+
+void loop() {
+  // Envia um pulso ultrassônico
+  digitalWrite(trigPin, LOW);
+  delayMicroseconds(2);
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+
+  // Calcula a duração do retorno do pulso
+  duration = pulseIn(echoPin, HIGH);
+
+  // Calcula a distância em centímetros
+  distance = duration * 0.034 / 2;
+
+  // Mostra a distância no monitor serial
+  Serial.print("Distancia: ");
+  Serial.print(distance);
+  Serial.println(" cm");
+
+  // Se a distância for menor que 10 cm, acende o LED
+  if (distance < 10) {
+    digitalWrite(ledPin, HIGH);
+  } else {
+    digitalWrite(ledPin, LOW);
+  }
+
+  // Pequeno atraso antes de repetir
+  delay(500);
+}
